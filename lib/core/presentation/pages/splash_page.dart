@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/core/helper/auth_helper.dart';
-import 'package:flutter_auth/core/routes/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../helper/auth_helper.dart';
+import '../../navigation/navigation_bloc.dart';
+import '../../routes/routes.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -15,9 +16,11 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     if (_authHelper.user == null) {
-      Navigator.of(context).pushNamed(login_page);
+      BlocProvider.of<NavigationBloc>(context)
+          .add(NavigationPushName(route: login_page));
     } else {
-      Navigator.of(context).pushNamedAndRemoveUntil(home_page, (route) => false);
+      BlocProvider.of<NavigationBloc>(context)
+          .add(NavigationPushName(route: home_page));
     }
     return Scaffold(
       body: SafeArea(
