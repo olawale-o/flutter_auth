@@ -8,7 +8,7 @@ final s1 = GetIt.instance;
 Future<void> init() async {
   // blocs
   s1.registerFactory(() => NavigationBloc(s1()));
-  
+
   final GlobalKey<NavigatorState> navigatorKey =  GlobalKey<NavigatorState>();
   s1.registerLazySingleton(() => navigatorKey);
 
