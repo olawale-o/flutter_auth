@@ -11,9 +11,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Flutter Auth",
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text('Login Page'),
         ),
@@ -24,12 +22,11 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               AuthButton(logo: "assets/user.png", text: "User email or phone"),
               AuthButton(logo: 'assets/google.png', text: "Continue with google"),
-             AuthButton(logo: "assets/twitter.png", text: "Continue with twitter"),
+              AuthButton(logo: "assets/twitter.png", text: "Continue with twitter"),
               AuthButton(logo: "assets/facebook.png", text: "Continue with facebook"),
             ],
           ),
-        ),
-      ),
+        )
     );
   }
 }
