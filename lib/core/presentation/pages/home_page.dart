@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/core/presentation/pages/splash_page.dart';
-import 'package:flutter_auth/core/routes/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../navigation/navigation_bloc.dart';
+import '../../routes/routes.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -15,17 +16,20 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-          future: _initialize,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasError) {
-              return Center(child: Text('Error ${snapshot.error}'),);
+    return Scaffold(
+      body: FutureBuilder(
+            future: _initialize,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error ${snapshot.error}'),);
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                BlocProvider.of<NavigationBloc>(context)
+                    .add(NavigationPushName(route: login_page));
+              }
+              return Center(child: CircularProgressIndicator(),);
             }
-            if (snapshot.connectionState == ConnectionState.done) {
-              return SplashPage();
-            }
-            return Center(child: CircularProgressIndicator(),);
-          }
-      );
+        ),
+    );
   }
 }
