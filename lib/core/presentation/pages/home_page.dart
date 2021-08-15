@@ -25,7 +25,7 @@ class _HomepageState extends State<Homepage> {
               }
               if (snapshot.connectionState == ConnectionState.done) {
                 BlocProvider.of<NavigationBloc>(context)
-                    .add(NavigationPushName(route: login_page));
+                    .add(NavigationPushName(route: splash_page));
               }
               return Center(child: CircularProgressIndicator(),);
             }
