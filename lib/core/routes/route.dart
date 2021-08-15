@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/features/email_auth/presentation/forms/login_form.dart';
 import 'routes.dart';
 import '../presentation/pages/dashboard_page.dart';
 import '../presentation/pages/home_page.dart';
@@ -10,6 +11,8 @@ class GeneratedRoute {
   static Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
     final args = routeSettings.arguments;
     switch(routeSettings.name) {
+      case login_form:
+        return MaterialPageRoute(builder: (_) => LoginForm());
       case dashboard_page:
         return MaterialPageRoute(builder: (_) => DashboardPage());
       case home_page:
