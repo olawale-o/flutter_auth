@@ -20,12 +20,12 @@ class _SplashPageState extends State<SplashPage> {
           .add(NavigationPushName(route: login_page));
     } else {
       BlocProvider.of<NavigationBloc>(context)
-          .add(NavigationPushName(route: home_page));
+          .add(NavigationPushName(route: dashboard_page));
     }
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: Text('Splash page ${_authHelper.user}'),
+          child: CircularProgressIndicator()
         ),
       ),
     );
