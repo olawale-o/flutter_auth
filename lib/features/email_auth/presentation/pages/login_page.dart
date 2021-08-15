@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/core/routes/routes.dart';
 import 'package:flutter_auth/features/email_auth/presentation/widgets/auth_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,10 +21,10 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AuthButton(logo: "assets/user.png", text: "User email or phone"),
-              AuthButton(logo: 'assets/google.png', text: "Continue with google"),
-              AuthButton(logo: "assets/twitter.png", text: "Continue with twitter"),
-              AuthButton(logo: "assets/facebook.png", text: "Continue with facebook"),
+              AuthButton(logo: "assets/user.png", text: "User email or phone", page: login_form,),
+              AuthButton(logo: 'assets/google.png', text: "Continue with google" , page: login_form,),
+              AuthButton(logo: "assets/twitter.png", text: "Continue with twitter" , page: login_form,),
+              AuthButton(logo: "assets/facebook.png", text: "Continue with facebook" , page: login_form,),
             ],
           ),
         )
