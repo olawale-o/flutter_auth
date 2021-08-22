@@ -45,7 +45,7 @@ class _SignupFormState extends State<SignupForm> {
             ),
             TextButton(onPressed: () async {
               print('${_email.text} and ${_password.text}');
-              await _authHelper.login(_email.text, _password.text);
+              await _authHelper.signUp(_email.text, _password.text);
             }, child: Text('Continue'),
               style: TextButton.styleFrom(
                   textStyle: const TextStyle( fontSize: 24.0,)
