@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../features/email_auth/presentation/forms/signup_form.dart';
 import '../../features/email_auth/presentation/forms/login_form.dart';
 import '../../features/email_auth/presentation/pages/signup_page.dart';
 import 'routes.dart';
@@ -24,6 +25,8 @@ class GeneratedRoute {
         return MaterialPageRoute(builder: (_) => LoginPage());
       case signup_page:
         return MaterialPageRoute(builder: (_) => SignupPage());
+      case signup_form:
+        return MaterialPageRoute(builder: (_) => SignupForm());
       default:
         return _errorRoute();
     }
