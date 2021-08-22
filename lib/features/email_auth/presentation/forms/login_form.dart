@@ -18,28 +18,39 @@ class _LoginFormState extends State<LoginForm> {
       appBar: AppBar(
         title: Text("Login"),
       ),
-      body: Center(
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _email,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email'
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              child: TextField(
+                controller: _email,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Email'
+                ),
               ),
             ),
-            TextField(
-              controller: _password,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password'
+
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10.0),
+              child: TextField(
+                controller: _password,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password'
+                ),
               ),
             ),
             TextButton(onPressed: () async {
               print('${_email.text} and ${_password.text}');
               await _authHelper.login(_email.text, _password.text);
-
-            }, child: Text('Continue'))
+            }, child: Text('Continue'),
+            style: TextButton.styleFrom(
+              textStyle: const TextStyle( fontSize: 24.0,)
+            ),
+            )
           ],
         ),
       ),
