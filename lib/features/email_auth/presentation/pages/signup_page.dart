@@ -26,7 +26,7 @@ class _SignupPageState extends State<SignupPage> {
               Expanded(child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  AuthButton(logo: "assets/user.png", text: "User email or phone", page: login_form,),
+                  AuthButton(logo: "assets/user.png", text: "User email or phone", page: signup_form,),
                   AuthButton(logo: 'assets/google.png', text: "Continue with google" , page: login_form,),
                   AuthButton(logo: "assets/twitter.png", text: "Continue with twitter" , page: login_form,),
                   AuthButton(logo: "assets/facebook.png", text: "Continue with facebook" , page: login_form,),
