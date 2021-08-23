@@ -15,33 +15,16 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Flutter Auth',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        navigatorKey: s1<NavigationBloc>().navKey,
+        initialRoute: initial_route,
+        onGenerateRoute: GeneratedRoute.onGenerateRoute,
+        // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Auth',
-      navigatorKey: s1<NavigationBloc>().navKey,
-      initialRoute: initial_route,
-      onGenerateRoute: GeneratedRoute.onGenerateRoute,
     );
   }
 }
