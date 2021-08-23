@@ -14,8 +14,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.firebaseAuth});
   @override
   Future<UserModel> logIn(String email, String password) {
-    // TODO: implement logIn
-    throw UnimplementedError();
+    final user = _signUp(email, password);
+    return user;
   }
 
   @override
@@ -25,6 +25,27 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   dynamic _signUp(String email, String password) async {
+    try{
+      UserCredential _userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      UserModel userModel = UserModel(
+          additionalUserInfo: _userCredential.additionalUserInfo,
+          user: _userCredential.user,
+          credential: _userCredential.credential
+      );
+      return userModel;
+    } on FirebaseAuthException catch(e){
+      if (e.code == 'weak-password') {
+        throw Exception("The password provided is too weak");
+      } else if (e.code == 'email-already-in-use') {
+        throw Exception('Email has been taken');
+      }
+    } catch(e) {
+      throw Exception('Error $e');
+    }
+  }
+
+  dynamic _login(String email, String password) async {
     try{
       UserCredential _userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
