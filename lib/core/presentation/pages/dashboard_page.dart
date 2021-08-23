@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/core/helper/auth_helper.dart';
-import 'package:flutter_auth/core/navigation/navigation_bloc.dart';
-import 'package:flutter_auth/core/routes/routes.dart';
+import '../../helper/auth_helper.dart';
+import '../../navigation/navigation_bloc.dart';
+import '../../routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardPage extends StatefulWidget {

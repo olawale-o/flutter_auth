@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_auth/features/email_auth/domain/entity/user_entity.dart';
+import '../../features/email_auth/domain/entity/user_entity.dart';
 
 class AuthHelper {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
