@@ -7,6 +7,7 @@ import '../model/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<UserModel> signUp(String email, String password);
   Future<UserModel> logIn(String email, String password);
+  Future<void> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -70,6 +71,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else if (e.code == 'email-already-in-use') {
         throw AuthException('Email has been taken');
       }
+    } catch(e) {
+      throw Exception('Error $e');
+    }
+  }
+
+  @override
+  Future<void> logout() async {
+    try{
+      final result = await firebaseAuth.signOut();
+      return result;
+    } on SocketException {
+      throw NetworkException('Please check your internet connection');
+    } on HttpException {
+      throw ServerException('Unable to connect to server');
     } catch(e) {
       throw Exception('Error $e');
     }
