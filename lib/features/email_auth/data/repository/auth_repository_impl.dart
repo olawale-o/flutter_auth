@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_auth/core/exceptions/failure.dart';
-import 'package:flutter_auth/features/email_auth/data/datasource/auth_remote_datasource.dart';
-import 'package:flutter_auth/features/email_auth/data/model/user_model.dart';
-import 'package:flutter_auth/features/email_auth/domain/repository/auth_repository.dart';
+import '../../../../core/exceptions/exception.dart';
+import '../../../../core/exceptions/failure.dart';
+import '../datasource/auth_remote_datasource.dart';
+import '../model/user_model.dart';
+import '../../domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
@@ -14,7 +15,11 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await authRemoteDataSource.signUp(email, password);
       return Right(user);
-    } on AuthFailure catch(e) {
+    } on ServerException catch(e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch(e) {
+      return Left(NetworkFailure(e.message));
+    } on AuthException catch(e) {
       return Left(AuthFailure(e.message));
     } catch(e) {
       return Left(UncaughtFailure(e.toString()));
@@ -26,10 +31,14 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await authRemoteDataSource.logIn(email, password);
       return Right(user);
-    } on AuthFailure catch(e) {
+    } on ServerException catch(e) {
+      return Left(ServerFailure(e.message));
+    } on NetworkException catch(e) {
+      return Left(NetworkFailure(e.message));
+    } on AuthException catch(e) {
       return Left(AuthFailure(e.message));
     } catch(e) {
-      return left(UncaughtFailure(e.toString()));
+      return Left(UncaughtFailure(e.toString()));
     }
   }
 

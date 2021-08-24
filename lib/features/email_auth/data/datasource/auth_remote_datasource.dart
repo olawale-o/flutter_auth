@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/exceptions/exception.dart';
 
@@ -34,6 +35,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           credential: _userCredential.credential
       );
       return userModel;
+    } on SocketException {
+      throw NetworkException('Please check your internet connection');
+    } on HttpException {
+      throw ServerException('Unable to connect to server');
     } on FirebaseAuthException catch(e) {
       if (e.code == 'weak-password') {
         throw AuthException("The password provided is too weak");
@@ -55,6 +60,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           credential: _userCredential.credential
       );
       return userModel;
+    } on SocketException {
+      throw NetworkException('Please check your internet connection');
+    } on HttpException {
+      throw ServerException('Unable to connect to server');
     } on FirebaseAuthException catch(e) {
       if (e.code == 'weak-password') {
         throw AuthException("The password provided is too weak");
