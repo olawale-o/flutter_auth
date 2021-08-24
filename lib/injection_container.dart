@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_login_usecase.dart';
+import 'package:flutter_auth/features/email_auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_sigup_usecase.dart';
+import 'package:flutter_auth/features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'features/email_auth/data/repository/auth_repository_impl.dart';
 import 'features/email_auth/domain/repository/auth_repository.dart';
 import 'features/email_auth/data/datasource/auth_remote_datasource.dart';
@@ -14,6 +16,11 @@ final s1 = GetIt.instance;
 Future<void> init() async {
   // blocs
   s1.registerFactory(() => NavigationBloc(s1()));
+  s1.registerFactory(() => AuthBloc(
+      signUpUseCase: s1(),
+      loginUseCase: s1(),
+      logoutUseCase: s1())
+  );
 
   // repositiories
   s1.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(authRemoteDataSource: s1()));
@@ -21,6 +28,7 @@ Future<void> init() async {
   // usecases
   s1.registerLazySingleton(() => AuthSignUpUseCase(authRepository: s1()));
   s1.registerLazySingleton(() => AuthLoginUseCase(authRepository: s1()));
+  s1.registerLazySingleton(() => AuthLogoutUseCase(authRepository: s1()));
 
   // datasources
   s1.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(firebaseAuth: s1()));
