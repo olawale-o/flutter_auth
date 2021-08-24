@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/features/email_auth/data/repository/auth_repository_impl.dart';
-import 'package:flutter_auth/features/email_auth/domain/repository/auth_repository.dart';
+import 'features/email_auth/data/repository/auth_repository_impl.dart';
+import 'features/email_auth/domain/repository/auth_repository.dart';
 import 'features/email_auth/data/datasource/auth_remote_datasource.dart';
 import 'package:get_it/get_it.dart';
 
