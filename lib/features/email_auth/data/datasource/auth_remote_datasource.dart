@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_auth/core/helper/auth_helper.dart';
+import '../../../../core/exceptions/exception.dart';
 
 import '../model/user_model.dart';
 
@@ -34,11 +34,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           credential: _userCredential.credential
       );
       return userModel;
-    } on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch(e) {
       if (e.code == 'weak-password') {
-        throw Exception("The password provided is too weak");
+        throw AuthException("The password provided is too weak");
       } else if (e.code == 'email-already-in-use') {
-        throw Exception('Email has been taken');
+        throw AuthException('Email has been taken');
       }
     } catch(e) {
       throw Exception('Error $e');
@@ -55,11 +55,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           credential: _userCredential.credential
       );
       return userModel;
-    } on FirebaseAuthException catch(e){
+    } on FirebaseAuthException catch(e) {
       if (e.code == 'weak-password') {
-        throw Exception("The password provided is too weak");
+        throw AuthException("The password provided is too weak");
       } else if (e.code == 'email-already-in-use') {
-        throw Exception('Email has been taken');
+        throw AuthException('Email has been taken');
       }
     } catch(e) {
       throw Exception('Error $e');
