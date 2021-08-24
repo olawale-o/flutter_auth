@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../navigation/navigation_bloc.dart';
 import '../../../injection_container.dart';
@@ -12,6 +13,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<NavigationBloc>(
             create: (context) => s1<NavigationBloc>()
+        ),
+        BlocProvider<AuthBloc>(
+            create: (context) => s1<AuthBloc>()
         ),
       ],
       child: MaterialApp(
