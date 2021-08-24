@@ -11,3 +11,8 @@ class AuthFailure extends Failure {
   final String message;
   AuthFailure(this.message) : super(message);
 }
+
+class UncaughtFailure extends Failure {
+  final String message;
+  UncaughtFailure(this.message) : super(message);
+}
