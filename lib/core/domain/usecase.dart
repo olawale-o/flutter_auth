@@ -15,3 +15,8 @@ class Params extends Equatable {
 
   List<Object?> get props => [email,];
 }
+
+class NoParams extends Equatable {
+  NoParams();
+  List<Object?> get props => [];
+}
