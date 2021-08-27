@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_auth/features/email_auth/domain/usecases/auth_current_user_usecase.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -17,27 +18,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthSignUpUseCase authSignUpUseCase;
   final AuthLoginUseCase authLoginUseCase;
   final AuthLogoutUseCase authLogoutUseCase;
+  final AuthCurrentUserUseCase authCurrentUserUseCase;
   final FirebaseAuth firebaseAuth;
 
   AuthBloc({
     required AuthSignUpUseCase signUpUseCase,
     required AuthLoginUseCase loginUseCase,
     required AuthLogoutUseCase logoutUseCase,
+    required AuthCurrentUserUseCase currentUserUseCase,
     required this.firebaseAuth,
 }) : authSignUpUseCase = signUpUseCase,
     authLoginUseCase = loginUseCase,
     authLogoutUseCase = logoutUseCase,
+    authCurrentUserUseCase = currentUserUseCase,
         super(AuthInitial()) {
     print('Auth Bloc');
-    firebaseAuth
-        .authStateChanges()
-        .listen((User? user) {
-      if (user == null) {
-        add(AuthLogoutEvent());
-      } else {
-        add(AuthenticatedEvent(user: user));
-      }
-    });
+    add(AuthCurrentUserEvent());
+    // firebaseAuth
+    //     .authStateChanges()
+    //     .listen((User? user) {
+    //   if (user == null) {
+    //     add(AuthLogoutEvent());
+    //   } else {
+    //     add(AuthenticatedEvent(user: user));
+    //   }
+    // });
   }
 
   @override
@@ -54,9 +59,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is AuthLogoutEvent) {
       yield AuthInitial();
-      // yield AuthLoading();
-      // final failureOrVoid = await authLogoutUseCase(NoParams());
-      // yield* _eitherFailureOrVoid(failureOrVoid);
+      yield AuthLoading();
+      final failureOrVoid = await authLogoutUseCase(NoParams());
+      yield* _eitherFailureOrVoid(failureOrVoid);
+    } else if (event is AuthCurrentUserEvent) {
+      yield AuthLoading();
+      final failureOrUser = await authCurrentUserUseCase(NoParams());
+      yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }
 

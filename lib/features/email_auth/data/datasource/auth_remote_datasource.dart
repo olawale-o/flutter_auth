@@ -73,9 +73,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> logout() async {
+  Future<List<void>> logout() async {
     try{
-      final result = await firebaseAuth.signOut();
+      final result = await Future.wait([firebaseAuth.signOut()]);
       return result;
     } on SocketException {
       throw NetworkException('Please check your internet connection');

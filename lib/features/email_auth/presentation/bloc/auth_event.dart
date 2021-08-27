@@ -19,6 +19,8 @@ class AuthSignUpEvent extends AuthEvent {
   AuthSignUpEvent({ required this.email, required this.password });
 }
 
+class AuthCurrentUserEvent extends AuthEvent {}
+
 class AuthenticatedEvent extends AuthEvent {
   final UserModel user;
   AuthenticatedEvent({required this.user});
