@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../helper/auth_helper.dart';
 import '../../navigation/navigation_bloc.dart';
 import '../../routes/routes.dart';
 
@@ -12,20 +12,28 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  final AuthHelper _authHelper = AuthHelper();
+
   @override
   Widget build(BuildContext context) {
-    if (_authHelper.user == null) {
-      BlocProvider.of<NavigationBloc>(context)
-          .add(NavigationPushName(route: login_page));
-    } else {
-      BlocProvider.of<NavigationBloc>(context)
-          .add(NavigationPushName(route: dashboard_page));
-    }
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: CircularProgressIndicator()
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthInitial) {
+          BlocProvider.of<NavigationBloc>(context)
+              .add(NavigationPushName(route: login_page));
+        } else {
+          BlocProvider.of<NavigationBloc>(context)
+              .add(NavigationPushName(route: dashboard_page));
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return Center(
+                child: Text('Splash screen $state'),
+              );
+            },
+          )
         ),
       ),
     );
