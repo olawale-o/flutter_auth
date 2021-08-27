@@ -42,7 +42,7 @@ Future<void> init() async {
 
   // datasources
   s1.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(firebaseAuth: s1()));
-  s1.registerLazySingleton(() => AuthLocalDataSourceImpl(firebaseAuth: s1()));
+  s1.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(firebaseAuth: s1()));
 
   final GlobalKey<NavigatorState> navigatorKey =  GlobalKey<NavigatorState>();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;

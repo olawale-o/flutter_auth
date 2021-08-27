@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
 import '../../navigation/navigation_bloc.dart';
 import '../../routes/routes.dart';
 
@@ -17,7 +17,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthInitial) {
+        if (state is AuthInitial || (state is AuthLoaded && state.userModel.user == null)) {
           BlocProvider.of<NavigationBloc>(context)
               .add(NavigationPushName(route: login_page));
         } else {
