@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import '../datasource/auth_local_datasource.dart';
 import '../../../../core/exceptions/exception.dart';
 import '../../../../core/exceptions/failure.dart';
 import '../datasource/auth_remote_datasource.dart';
@@ -7,8 +8,12 @@ import '../../domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSource;
+  final AuthLocalDataSource authLocalDataSource;
 
-  AuthRepositoryImpl({ required this.authRemoteDataSource });
+  AuthRepositoryImpl({
+    required this.authRemoteDataSource,
+    required this.authLocalDataSource,
+  });
 
   @override
   Future<Either<Failure, UserModel>> signUp(String email, String password) async {
@@ -53,6 +58,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(NetworkFailure(e.message));
     } on AuthException catch(e) {
       return Left(AuthFailure(e.message));
+    } catch(e) {
+      return Left(UncaughtFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure,UserModel>> getCurrentUser() async {
+    try {
+      final result = await authLocalDataSource.currentUser();
+      return Right(result);
     } catch(e) {
       return Left(UncaughtFailure(e.toString()));
     }
