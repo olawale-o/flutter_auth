@@ -22,7 +22,9 @@ Future<void> init() async {
       signUpUseCase: s1(),
       loginUseCase: s1(),
       logoutUseCase: s1(),
-     firebaseAuth: s1(),)
+     firebaseAuth: s1(),
+     currentUserUseCase: s1(),
+    )
   );
 
   // repositiories

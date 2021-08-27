@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../helper/auth_helper.dart';
+import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_auth/injection_container.dart';
 import '../../navigation/navigation_bloc.dart';
 import '../../routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,15 +13,15 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  AuthHelper _authHelper = AuthHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard page'),
         actions: [
-          IconButton(onPressed: () async {
-            await _authHelper.logOut();
+          IconButton(onPressed: ()  {
+            s1<AuthBloc>().add(AuthLogoutEvent());
             BlocProvider.of<NavigationBloc>(context)
                 .add(NavigationPushName(route: login_page));
           }, icon: Icon(Icons.home))
