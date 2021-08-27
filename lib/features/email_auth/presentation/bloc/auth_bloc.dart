@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -16,15 +17,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthSignUpUseCase authSignUpUseCase;
   final AuthLoginUseCase authLoginUseCase;
   final AuthLogoutUseCase authLogoutUseCase;
+  final FirebaseAuth firebaseAuth;
 
   AuthBloc({
     required AuthSignUpUseCase signUpUseCase,
     required AuthLoginUseCase loginUseCase,
     required AuthLogoutUseCase logoutUseCase,
+    required this.firebaseAuth,
 }) : authSignUpUseCase = signUpUseCase,
     authLoginUseCase = loginUseCase,
     authLogoutUseCase = logoutUseCase,
-        super(AuthInitial());
+        super(AuthInitial()) {
+    print('Auth Bloc');
+    firebaseAuth
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        add(AuthLogoutEvent());
+      } else {
+        add(AuthenticatedEvent(user: user));
+      }
+    });
+  }
 
   @override
   Stream<AuthState> mapEventToState(
@@ -39,9 +53,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final failureOrUser = await authLoginUseCase(Params(email: event.email, password: event.password));
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is AuthLogoutEvent) {
-      yield AuthLoading();
-      final failureOrVoid = await authLogoutUseCase(NoParams());
-      yield* _eitherFailureOrVoid(failureOrVoid);
+      yield AuthInitial();
+      // yield AuthLoading();
+      // final failureOrVoid = await authLogoutUseCase(NoParams());
+      // yield* _eitherFailureOrVoid(failureOrVoid);
     }
   }
 
