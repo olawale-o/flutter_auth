@@ -19,7 +19,8 @@ Future<void> init() async {
   s1.registerFactory(() => AuthBloc(
       signUpUseCase: s1(),
       loginUseCase: s1(),
-      logoutUseCase: s1())
+      logoutUseCase: s1(),
+     firebaseAuth: s1(),)
   );
 
   // repositiories
