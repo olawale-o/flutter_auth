@@ -15,14 +15,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl({required this.firebaseAuth});
   @override
-  Future<UserModel> logIn(String email, String password) {
-    final user = _signUp(email, password);
+  Future<UserModel> logIn(String email, String password) async {
+    final user = await _login(email, password);
     return user;
   }
 
   @override
   Future<UserModel> signUp(String email, String password) async {
-    final user = _signUp(email, password);
+    final user = await _signUp(email, password);
     return user;
   }
 
@@ -31,9 +31,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserCredential _userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
-          additionalUserInfo: _userCredential.additionalUserInfo,
           user: _userCredential.user,
-          credential: _userCredential.credential
       );
       return userModel;
     } on SocketException {
@@ -56,9 +54,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserCredential _userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
-          additionalUserInfo: _userCredential.additionalUserInfo,
           user: _userCredential.user,
-          credential: _userCredential.credential
       );
       return userModel;
     } on SocketException {
