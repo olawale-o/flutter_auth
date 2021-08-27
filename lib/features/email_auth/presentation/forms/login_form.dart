@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/core/helper/auth_helper.dart';
+import 'package:flutter_auth/features/email_auth/presentation/bloc/auth_bloc.dart';
+
+import '../../../../injection_container.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -9,7 +12,6 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  AuthHelper _authHelper = AuthHelper();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   @override
@@ -43,9 +45,11 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-            TextButton(onPressed: () async {
+            TextButton(onPressed: () {
               print('${_email.text} and ${_password.text}');
-              await _authHelper.login(_email.text, _password.text);
+              s1<AuthBloc>().add(
+                  AuthLoginEvent(email: _email.text, password: _password.text)
+              );
             }, child: Text('Continue'),
             style: TextButton.styleFrom(
               textStyle: const TextStyle( fontSize: 24.0,)
