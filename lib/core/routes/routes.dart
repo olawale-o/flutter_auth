@@ -5,4 +5,4 @@ const dashboard_page = 'dashboard_page';
 const login_form = 'login_form';
 const signup_page = 'signup_page';
 const signup_form = 'signup_form';
-const initial_route = home_page;
+const initial_route = splash_page;
