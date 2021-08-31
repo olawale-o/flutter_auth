@@ -10,8 +10,19 @@ abstract class NavigationEvent  extends Equatable {
 class NavigationPushName extends NavigationEvent {
 
   final String route;
+  String? data;
 
-  NavigationPushName({required this.route,});
+  NavigationPushName({required this.route, this.data});
+}
+
+class NavigationPushReplace extends NavigationEvent {
+
+  final String route;
+  String? data;
+
+  NavigationPushReplace({required this.route, this.data});
 }
 
 class NavigationPop extends NavigationEvent {}
+
+class NavigationHome extends NavigationEvent {}

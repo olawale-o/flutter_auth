@@ -52,7 +52,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   dynamic _login(String email, String password) async {
     try{
       UserCredential _userCredential = await firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
           user: _userCredential.user,
       );

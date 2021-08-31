@@ -17,12 +17,17 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthInitial || (state is AuthLoaded && state.userModel.user == null)) {
+        if (state is AuthInitial) {
+          BlocProvider.of<NavigationBloc>(context)
+              .add(NavigationPop());
           BlocProvider.of<NavigationBloc>(context)
               .add(NavigationPushName(route: login_page));
-        } else {
+        }
+        if (state is AuthLoaded) {
           BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPushName(route: dashboard_page));
+              .add(NavigationPop());
+          BlocProvider.of<NavigationBloc>(context)
+              .add(NavigationPushName(route: dashboard_page, data: state.userModel.user?.email));
         }
       },
       child: Scaffold(

@@ -16,7 +16,7 @@ class GeneratedRoute {
       case login_form:
         return MaterialPageRoute(builder: (_) => LoginForm());
       case dashboard_page:
-        return MaterialPageRoute(builder: (_) => DashboardPage());
+        return MaterialPageRoute(builder: (_) => DashboardPage(data: args.toString(),));
       case home_page:
         return MaterialPageRoute(builder: (_) => Homepage());
       case splash_page:

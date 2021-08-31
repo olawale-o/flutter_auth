@@ -8,7 +8,7 @@ class AuthLoginUseCase implements UseCase<UserModel, Params> {
   final AuthRepository authRepository;
   AuthLoginUseCase({ required this.authRepository });
   @override
-  Future<Either<Failure, UserModel>> call(params) async {
+  Future<Either<Failure, UserModel>> call(Params params) async {
     return await authRepository.login(params.email, params.password);
   }
 

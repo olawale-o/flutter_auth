@@ -15,34 +15,26 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthSignUpUseCase authSignUpUseCase;
-  final AuthLoginUseCase authLoginUseCase;
-  final AuthLogoutUseCase authLogoutUseCase;
-  final AuthCurrentUserUseCase authCurrentUserUseCase;
-  final FirebaseAuth firebaseAuth;
+  final AuthSignUpUseCase _authSignUpUseCase;
+  final AuthLoginUseCase _authLoginUseCase;
+  final AuthLogoutUseCase _authLogoutUseCase;
+  final AuthCurrentUserUseCase _authCurrentUserUseCase;
+  final FirebaseAuth _firebaseAuth;
 
   AuthBloc({
     required AuthSignUpUseCase signUpUseCase,
     required AuthLoginUseCase loginUseCase,
     required AuthLogoutUseCase logoutUseCase,
     required AuthCurrentUserUseCase currentUserUseCase,
-    required this.firebaseAuth,
-}) : authSignUpUseCase = signUpUseCase,
-    authLoginUseCase = loginUseCase,
-    authLogoutUseCase = logoutUseCase,
-    authCurrentUserUseCase = currentUserUseCase,
+    required FirebaseAuth firebaseAuth,
+}) : _authSignUpUseCase = signUpUseCase,
+    _authLoginUseCase = loginUseCase,
+    _authLogoutUseCase = logoutUseCase,
+    _authCurrentUserUseCase = currentUserUseCase,
+    _firebaseAuth = firebaseAuth,
         super(AuthInitial()) {
     print('Auth Bloc');
     add(AuthCurrentUserEvent());
-    // firebaseAuth
-    //     .authStateChanges()
-    //     .listen((User? user) {
-    //   if (user == null) {
-    //     add(AuthLogoutEvent());
-    //   } else {
-    //     add(AuthenticatedEvent(user: user));
-    //   }
-    // });
   }
 
   @override
@@ -51,26 +43,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is AuthSignUpEvent) {
       yield(AuthLoading());
-      final failureOrUser = await authSignUpUseCase(Params(email: event.email, password: event.password));
+      final failureOrUser = await _authSignUpUseCase(Params(email: event.email, password: event.password));
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if (event is AuthLoginEvent) {
       yield AuthLoading();
-      final failureOrUser = await authLoginUseCase(Params(email: event.email, password: event.password));
+      final failureOrUser = await _authLoginUseCase(Params(email: event.email, password: event.password));
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is AuthLogoutEvent) {
-      yield AuthInitial();
       yield AuthLoading();
-      final failureOrVoid = await authLogoutUseCase(NoParams());
+      yield AuthInitial();
+      final failureOrVoid = await _authLogoutUseCase(NoParams());
       yield* _eitherFailureOrVoid(failureOrVoid);
     } else if (event is AuthCurrentUserEvent) {
       yield AuthLoading();
-      final failureOrUser = await authCurrentUserUseCase(NoParams());
+      final failureOrUser = await _authCurrentUserUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }
 
   Stream<AuthState> _eitherFailureOrLoaded(Either<Failure, UserModel> failureOrUser) async* {
-    yield failureOrUser.fold((e) => AuthError(message: _buildError(e)), (u) => AuthLoaded(userModel: _buildUser(u)));
+    yield failureOrUser.fold(
+     (e) => AuthError(message: _buildError(e)),
+     (u) {
+     if (u.user != null) return AuthLoaded(userModel: _buildUser(u));
+       return AuthInitial();
+     }
+    );
   }
 
   Stream<AuthState> _eitherFailureOrVoid(Either<Failure, void> failureOrVoid) async* {

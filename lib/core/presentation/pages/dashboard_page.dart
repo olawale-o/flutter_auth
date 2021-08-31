@@ -6,7 +6,8 @@ import '../../routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+  final String data;
+  const DashboardPage({Key? key, required this.data}) : super(key: key);
 
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -23,12 +24,12 @@ class _DashboardPageState extends State<DashboardPage> {
           IconButton(onPressed: ()  {
             s1<AuthBloc>().add(AuthLogoutEvent());
             BlocProvider.of<NavigationBloc>(context)
-                .add(NavigationPushName(route: login_page));
+                .add(NavigationHome());
           }, icon: Icon(Icons.home))
         ],
       ),
       body: Center(
-        child: Text('Logged in as'),
+        child: Text('Logged in as ${widget.data}'),
       ),
     );
   }

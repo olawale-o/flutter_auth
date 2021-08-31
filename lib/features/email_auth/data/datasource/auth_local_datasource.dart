@@ -7,9 +7,10 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final FirebaseAuth firebaseAuth;
+  final FirebaseAuth _firebaseAuth;
 
-  AuthLocalDataSourceImpl({ required this.firebaseAuth });
+  AuthLocalDataSourceImpl({ required FirebaseAuth firebaseAuth })
+      : _firebaseAuth = firebaseAuth;
 
   @override
   Future<UserModel> currentUser() async{
@@ -19,7 +20,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   User? _currentUser(){
     try {
-      return firebaseAuth.currentUser;
+      return _firebaseAuth.currentUser;
     } catch(e) {
       throw Exception('No current user');
     }
