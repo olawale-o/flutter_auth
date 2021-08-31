@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AuthButton extends StatelessWidget {
   final String logo;
   final String text;
-  final String page;
+  final VoidCallback voidCallback;
   const AuthButton({Key? key,
-    required this.logo, required this.text, required this.page
+    required this.logo,
+    required this.text,
+    required this.voidCallback,
   }) : super(key: key);
 
   @override
@@ -15,10 +17,7 @@ class AuthButton extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       child: OutlinedButton(
-          onPressed: () => {
-            BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPushName(route: page)),
-          },
+          onPressed: () => voidCallback(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Row(

@@ -19,15 +19,11 @@ class _SplashPageState extends State<SplashPage> {
       listener: (context, state) {
         if (state is AuthInitial) {
           BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPop());
-          BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPushName(route: login_page));
+              .add(NavigationPushReplace(route: login_page));
         }
         if (state is AuthLoaded) {
           BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPop());
-          BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPushName(route: dashboard_page, data: state.userModel.user?.email));
+              .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
         }
       },
       child: Scaffold(

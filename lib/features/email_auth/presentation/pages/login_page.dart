@@ -30,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       AuthButton(logo: "assets/user.png",
                         text: "User email or phone",
-                        page: login_form,),
+                        voidCallback: () =>
+                            BlocProvider.of<NavigationBloc>(context).add(NavigationPushName(route: login_form)),),
                       SocialButton(logo: 'assets/google.png',
                           text: "Continue with google",
                           voidCallback: () => print('google')),
