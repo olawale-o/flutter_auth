@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/theme.dart';
 import '../../../features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../navigation/navigation_bloc.dart';
@@ -18,16 +19,27 @@ class MyApp extends StatelessWidget {
             create: (context) => s1<AuthBloc>()
         ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Auth',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onPanDown: (_) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            FocusManager.instance.primaryFocus!.unfocus();
+          }
+        },
+        child: MaterialApp(
+          title: 'Flutter Auth',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          navigatorKey: s1<NavigationBloc>().navKey,
+          initialRoute: initial_route,
+          onGenerateRoute: GeneratedRoute.onGenerateRoute,
+          // home: MyHomePage(title: 'Flutter Demo Home Page'),
         ),
-        navigatorKey: s1<NavigationBloc>().navKey,
-        initialRoute: initial_route,
-        onGenerateRoute: GeneratedRoute.onGenerateRoute,
-        // home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
