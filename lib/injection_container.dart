@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
 import 'features/email_auth/data/datasource/auth_local_datasource.dart';
 import 'features/email_auth/domain/usecases/auth_current_user_usecase.dart';
 import 'features/email_auth/domain/usecases/auth_login_usecase.dart';
@@ -22,8 +23,9 @@ Future<void> init() async {
       signUpUseCase: s1(),
       loginUseCase: s1(),
       logoutUseCase: s1(),
-     firebaseAuth: s1(),
-     currentUserUseCase: s1(),
+      firebaseAuth: s1(),
+      currentUserUseCase: s1(),
+      googleSigInUseCase: s1(),
     )
   );
 
@@ -39,6 +41,7 @@ Future<void> init() async {
   s1.registerLazySingleton(() => AuthLoginUseCase(authRepository: s1()));
   s1.registerLazySingleton(() => AuthLogoutUseCase(authRepository: s1()));
   s1.registerLazySingleton(() => AuthCurrentUserUseCase(authRepository: s1()));
+  s1.registerLazySingleton(() => AuthGoogleSigInUseCase(authRepository: s1()));
 
   // datasources
   s1.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(firebaseAuth: s1()));
