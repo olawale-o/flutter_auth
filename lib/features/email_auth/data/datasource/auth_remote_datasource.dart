@@ -62,10 +62,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on HttpException {
       throw ServerException('Unable to connect to server');
     } on FirebaseAuthException catch(e) {
-      if (e.code == 'weak-password') {
-        throw AuthException("The password provided is too weak");
-      } else if (e.code == 'email-already-in-use') {
-        throw AuthException('Email has been taken');
+      if (e.code == 'user-not-found') {
+        throw AuthException('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        throw AuthException('Wrong password provided for that user.');
       }
     } catch(e) {
       throw Exception('Error $e');
