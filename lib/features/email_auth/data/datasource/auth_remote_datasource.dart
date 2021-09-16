@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/exceptions/exception.dart';
 
 import '../model/user_model.dart';
@@ -7,6 +8,7 @@ import '../model/user_model.dart';
 abstract class AuthRemoteDataSource {
   Future<UserModel> signUp(String email, String password);
   Future<UserModel> logIn(String email, String password);
+  Future<UserModel> signInWithGoogle();
   Future<void> logout();
 }
 
@@ -77,6 +79,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try{
       final result = await Future.wait([firebaseAuth.signOut()]);
       return result;
+    } on SocketException {
+      throw NetworkException('Please check your internet connection');
+    } on HttpException {
+      throw ServerException('Unable to connect to server');
+    } catch(e) {
+      throw Exception('Error $e');
+    }
+  }
+
+  @override
+  Future<UserModel> signInWithGoogle() async {
+    final user = await _signInWithGoogle();
+    return user;
+  }
+
+  dynamic _signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await firebaseAuth.signInWithCredential(credential);
+      UserModel userModel = UserModel(
+        user: firebaseAuth.currentUser
+      );
+      return userModel;
     } on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
