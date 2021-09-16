@@ -78,8 +78,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserModel _buildUser(UserModel authState) => authState;
 
   String _buildError(Failure failure) {
-    if (failure is NetworkFailure) return 'Check your internet settings';
-    if (failure is ServerFailure) return 'Unable to connect server';
+    if (failure is NetworkFailure) return failure.message;
+    if (failure is ServerFailure) return failure.message;
+    if (failure is AuthFailure) return failure.message;
     return 'Uncaught error';
   }
 }

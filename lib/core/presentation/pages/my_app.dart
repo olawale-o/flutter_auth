@@ -19,19 +19,7 @@ class MyApp extends StatelessWidget {
             create: (context) => s1<AuthBloc>()
         ),
       ],
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onPanDown: (_) {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        onTap: () {
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus &&
-              currentFocus.focusedChild != null) {
-            FocusManager.instance.primaryFocus!.unfocus();
-          }
-        },
-        child: MaterialApp(
+      child: MaterialApp(
           title: 'Flutter Auth',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
@@ -40,7 +28,6 @@ class MyApp extends StatelessWidget {
           onGenerateRoute: GeneratedRoute.onGenerateRoute,
           // home: MyHomePage(title: 'Flutter Demo Home Page'),
         ),
-      ),
     );
   }
 }
