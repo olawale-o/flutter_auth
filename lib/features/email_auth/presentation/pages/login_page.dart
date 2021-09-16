@@ -14,33 +14,45 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthBloc, AuthState>(
+        listener: (BuildContext context, AuthState state) {
+          if (state is AuthLoaded) {
+            BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
+            BlocProvider.of<NavigationBloc>(context)
+                .add(NavigationPushName(route: dashboard_page, data: state.userModel.user?.email));
+          }
+        },
+        child: Scaffold(
             appBar: AppBar(
               title: Text('Login Page'),
             ),
             body: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 35.0),
+              padding: const EdgeInsets.all(35.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Expanded(child: ListView(
                     children: [
-                      AuthButton(logo: "assets/user.png",
-                        text: "User email or phone",
-                        voidCallback: () =>
-                            BlocProvider.of<NavigationBloc>(context).add(NavigationPushName(route: login_form)),),
-                      SocialButton(logo: 'assets/google.png',
-                          text: "Continue with google",
-                          voidCallback: () => print('google')),
-                      SocialButton(logo: "assets/twitter.png",
-                          text: "Continue with twitter",
-                          voidCallback: () => print('twitter')),
-                      SocialButton(logo: "assets/facebook.png",
-                          text: "Continue with facebook",
-                          voidCallback: () => print('facebook')),
+                      Column(
+                        children: [
+                          AuthButton(logo: "assets/user.png",
+                            text: "User email or phone",
+                            voidCallback: () =>
+                                BlocProvider.of<NavigationBloc>(context).add(NavigationPushName(route: login_form)),),
+                          SocialButton(logo: 'assets/google.png',
+                              text: "Continue with google",
+                              voidCallback: () => BlocProvider.of<AuthBloc>(context).add(AuthGoogleSigInEvent())
+                          ),
+                          SocialButton(logo: "assets/twitter.png",
+                              text: "Continue with twitter",
+                              voidCallback: () => print('twitter')),
+                          SocialButton(logo: "assets/facebook.png",
+                              text: "Continue with facebook",
+                              voidCallback: () => print('facebook')),
+                        ],
+                      )
                     ],
                   )),
                   Container(
@@ -59,6 +71,6 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             )
-        );
+        ));
   }
 }

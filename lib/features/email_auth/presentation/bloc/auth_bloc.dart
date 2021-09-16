@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_current_user_usecase.dart';
+import 'package:flutter_auth/features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -19,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthLoginUseCase _authLoginUseCase;
   final AuthLogoutUseCase _authLogoutUseCase;
   final AuthCurrentUserUseCase _authCurrentUserUseCase;
+  final AuthGoogleSigInUseCase _authGoogleSigInUseCase;
   final FirebaseAuth _firebaseAuth;
 
   AuthBloc({
@@ -27,11 +29,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required AuthLogoutUseCase logoutUseCase,
     required AuthCurrentUserUseCase currentUserUseCase,
     required FirebaseAuth firebaseAuth,
+    required AuthGoogleSigInUseCase googleSigInUseCase,
 }) : _authSignUpUseCase = signUpUseCase,
     _authLoginUseCase = loginUseCase,
     _authLogoutUseCase = logoutUseCase,
     _authCurrentUserUseCase = currentUserUseCase,
     _firebaseAuth = firebaseAuth,
+    _authGoogleSigInUseCase = googleSigInUseCase,
         super(AuthInitial()) {
     print('Auth Bloc');
     add(AuthCurrentUserEvent());
@@ -58,6 +62,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthLoading();
       final failureOrUser = await _authCurrentUserUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
+    } else if (event is AuthGoogleSigInEvent) {
+      yield AuthLoading();
+      final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
+      yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }
 
@@ -78,6 +86,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   UserModel _buildUser(UserModel authState) => authState;
 
   String _buildError(Failure failure) {
+    print("failure ${failure.message}");
     if (failure is NetworkFailure) return failure.message;
     if (failure is ServerFailure) return failure.message;
     if (failure is AuthFailure) return failure.message;

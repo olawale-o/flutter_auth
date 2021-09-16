@@ -19,7 +19,7 @@ class SocialButton extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 7.0),
       child: OutlinedButton(
-          onPressed: () => _voidCallback,
+          onPressed: () => _voidCallback(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Row(
