@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_current_user_usecase.dart';
 import 'package:flutter_auth/features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
@@ -38,7 +39,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _authGoogleSigInUseCase = googleSigInUseCase,
         super(AuthInitial()) {
     print('Auth Bloc');
-    add(AuthCurrentUserEvent());
+    // add(AuthCurrentUserEvent());
+    add(AppStartedEvent());
   }
 
   @override
@@ -49,10 +51,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield(AuthLoading());
       final failureOrUser = await _authSignUpUseCase(Params(email: event.email, password: event.password));
       yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if (event is AuthLoginEvent) {
-      yield AuthLoading();
-      final failureOrUser = await _authLoginUseCase(Params(email: event.email, password: event.password));
-      yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is AuthLogoutEvent) {
       yield AuthLoading();
       yield AuthInitial();
@@ -62,9 +60,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield AuthLoading();
       final failureOrUser = await _authCurrentUserUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if (event is AuthGoogleSigInEvent) {
+    } else if (event is AppStartedEvent) {
       yield AuthLoading();
-      final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
+      final failureOrUser = await _authCurrentUserUseCase(NoParams());
+      yield* _eitherFailureOrLoaded(failureOrUser);
+    } else if (event is LoggedInEvent) {
+      yield AuthLoading();
+      final failureOrUser = await _authCurrentUserUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }
