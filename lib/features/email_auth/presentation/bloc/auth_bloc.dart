@@ -18,28 +18,18 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthSignUpUseCase _authSignUpUseCase;
-  final AuthLoginUseCase _authLoginUseCase;
   final AuthLogoutUseCase _authLogoutUseCase;
   final AuthCurrentUserUseCase _authCurrentUserUseCase;
-  final AuthGoogleSigInUseCase _authGoogleSigInUseCase;
-  final FirebaseAuth _firebaseAuth;
 
   AuthBloc({
     required AuthSignUpUseCase signUpUseCase,
-    required AuthLoginUseCase loginUseCase,
     required AuthLogoutUseCase logoutUseCase,
     required AuthCurrentUserUseCase currentUserUseCase,
-    required FirebaseAuth firebaseAuth,
-    required AuthGoogleSigInUseCase googleSigInUseCase,
 }) : _authSignUpUseCase = signUpUseCase,
-    _authLoginUseCase = loginUseCase,
     _authLogoutUseCase = logoutUseCase,
     _authCurrentUserUseCase = currentUserUseCase,
-    _firebaseAuth = firebaseAuth,
-    _authGoogleSigInUseCase = googleSigInUseCase,
         super(AuthInitial()) {
     print('Auth Bloc');
-    // add(AuthCurrentUserEvent());
     add(AppStartedEvent());
   }
 

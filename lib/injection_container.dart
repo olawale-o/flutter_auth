@@ -13,6 +13,7 @@ import 'features/email_auth/data/datasource/auth_remote_datasource.dart';
 import 'package:get_it/get_it.dart';
 
 import 'core/navigation/navigation_bloc.dart';
+import 'features/email_auth/presentation/bloc/login_bloc.dart';
 
 final s1 = GetIt.instance;
 
@@ -21,11 +22,14 @@ Future<void> init() async {
   s1.registerFactory(() => NavigationBloc(s1()));
   s1.registerFactory(() => AuthBloc(
       signUpUseCase: s1(),
-      loginUseCase: s1(),
       logoutUseCase: s1(),
-      firebaseAuth: s1(),
       currentUserUseCase: s1(),
-      googleSigInUseCase: s1(),
+    )
+  );
+  s1.registerFactory(() => LoginBloc(
+      firebaseAuth: s1(),
+      authGoogleSigInUseCase: s1(),
+      authLoginUseCase: s1(),
     )
   );
 
