@@ -23,7 +23,7 @@ class _DashboardPageState extends State<DashboardPage> {
             BlocProvider.of<AuthBloc>(context).add(AuthLogoutEvent());
             BlocProvider.of<NavigationBloc>(context)
                 .add(NavigationHome());
-          }, icon: Icon(Icons.home))
+          }, icon: Icon(Icons.exit_to_app))
         ],
       ),
       body: Center(
