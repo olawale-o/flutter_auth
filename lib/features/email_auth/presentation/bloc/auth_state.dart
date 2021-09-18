@@ -20,3 +20,5 @@ class AuthLoaded extends AuthState {
   final UserModel userModel;
   AuthLoaded({required this.userModel});
 }
+
+class UnAuthenticated extends AuthState {}
