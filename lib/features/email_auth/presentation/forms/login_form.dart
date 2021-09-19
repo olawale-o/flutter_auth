@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/features/email_auth/presentation/bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/login_bloc.dart';
 import '../../../../core/blocs/validation_bloc.dart';
 import '../../../../core/navigation/navigation_bloc.dart';
 import '../../../../core/routes/routes.dart';
@@ -35,7 +35,6 @@ class _LoginFormState extends State<LoginForm> {
   }
   
   void _onLogin(BuildContext context) {
-    //BlocProvider.of<AuthBloc>(context).add(AuthLoginEvent(email: _email.text, password: _password.text));
     BlocProvider.of<LoginBloc>(context).add(NormalLoginEvent(email: _email.text, password: _password.text));
     _email.clear();
     _password.clear();
