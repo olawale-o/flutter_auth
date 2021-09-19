@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/features/email_auth/presentation/bloc/register_bloc.dart';
 import 'features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
 import 'features/email_auth/data/datasource/auth_local_datasource.dart';
 import 'features/email_auth/domain/usecases/auth_current_user_usecase.dart';
@@ -20,16 +21,26 @@ final s1 = GetIt.instance;
 Future<void> init() async {
   // blocs
   s1.registerFactory(() => NavigationBloc(s1()));
+  // Authbloc
   s1.registerFactory(() => AuthBloc(
       signUpUseCase: s1(),
       logoutUseCase: s1(),
       currentUserUseCase: s1(),
     )
   );
+
+  //Loginbloc
   s1.registerFactory(() => LoginBloc(
       firebaseAuth: s1(),
       authGoogleSigInUseCase: s1(),
       authLoginUseCase: s1(),
+    )
+  );
+
+  //Registerbloc
+  s1.registerFactory(() => RegisterBloc(
+      firebaseAuth: s1(),
+    authRegisterUseCase: s1(),
     )
   );
 
