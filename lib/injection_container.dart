@@ -23,7 +23,6 @@ Future<void> init() async {
   s1.registerFactory(() => NavigationBloc(s1()));
   // Authbloc
   s1.registerFactory(() => AuthBloc(
-      signUpUseCase: s1(),
       logoutUseCase: s1(),
       currentUserUseCase: s1(),
     )
