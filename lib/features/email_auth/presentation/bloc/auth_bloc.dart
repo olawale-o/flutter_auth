@@ -1,32 +1,26 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_auth/features/email_auth/domain/usecases/auth_current_user_usecase.dart';
-import 'package:flutter_auth/features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
-import 'package:flutter_auth/features/email_auth/domain/usecases/auth_logout_usecase.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
+import '../../domain/usecases/auth_current_user_usecase.dart';
+import '../../domain/usecases/auth_logout_usecase.dart';
 import '../../../../core/domain/usecase.dart';
 import '../../../../core/exceptions/failure.dart';
 import '../../data/model/user_model.dart';
-import '../../domain/usecases/auth_login_usecase.dart';
-import '../../domain/usecases/auth_sigup_usecase.dart';
+
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthSignUpUseCase _authSignUpUseCase;
   final AuthLogoutUseCase _authLogoutUseCase;
   final AuthCurrentUserUseCase _authCurrentUserUseCase;
 
   AuthBloc({
-    required AuthSignUpUseCase signUpUseCase,
     required AuthLogoutUseCase logoutUseCase,
     required AuthCurrentUserUseCase currentUserUseCase,
-}) : _authSignUpUseCase = signUpUseCase,
-    _authLogoutUseCase = logoutUseCase,
+}) : _authLogoutUseCase = logoutUseCase,
     _authCurrentUserUseCase = currentUserUseCase,
         super(AuthInitial()) {
     print('Auth Bloc');
@@ -37,11 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if (event is AuthSignUpEvent) {
-      yield(AuthLoading());
-      final failureOrUser = await _authSignUpUseCase(Params(email: event.email, password: event.password));
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if(event is AuthLogoutEvent) {
+    if(event is AuthLogoutEvent) {
       yield AuthLoading();
       yield AuthInitial();
       final failureOrVoid = await _authLogoutUseCase(NoParams());
