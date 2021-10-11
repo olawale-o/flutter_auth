@@ -41,11 +41,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is GoogleSigInEvent) {
       yield LoginLoading();
-      final failureOrUser  = await _authFacebookSigInUseCase(NoParams());
+      final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
     } else if(event is FacebookSigInEvent) {
       yield LoginLoading();
-      final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
+      final failureOrUser  = await _authFacebookSigInUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }
