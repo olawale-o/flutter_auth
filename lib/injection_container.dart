@@ -70,6 +70,7 @@ Future<void> init() async {
   final FacebookAuth facebookAuth = FacebookAuth.instance;
   s1.registerLazySingleton(() => navigatorKey);
   s1.registerLazySingleton(() => firebaseAuth);
+  s1.registerLazySingleton(() => facebookAuth);
 
   print('initialized');
 }
