@@ -8,4 +8,5 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, UserModel>> getCurrentUser();
   Future<Either<Failure, UserModel>> signInWithGoogle();
+  Future<Either<Failure, UserModel>> signInWithFacebook();
 }

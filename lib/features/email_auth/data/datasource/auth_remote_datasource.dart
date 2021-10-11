@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/exceptions/exception.dart';
 
@@ -9,13 +10,18 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signUp(String email, String password);
   Future<UserModel> logIn(String email, String password);
   Future<UserModel> signInWithGoogle();
+  Future<UserModel> signInWithFacebook();
   Future<void> logout();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
+  final FacebookAuth facebookAuth;
 
-  AuthRemoteDataSourceImpl({required this.firebaseAuth});
+  AuthRemoteDataSourceImpl({
+    required this.firebaseAuth,
+    required this.facebookAuth,
+  });
   @override
   Future<UserModel> logIn(String email, String password) async {
     final user = await _login(email, password);
@@ -110,6 +116,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       return userModel;
     } on SocketException {
+      throw NetworkException('Please check your internet connection');
+    } on HttpException {
+      throw ServerException('Unable to connect to server');
+    } catch(e) {
+      throw Exception('Error $e');
+    }
+  }
+
+  @override
+  Future<UserModel> signInWithFacebook() async {
+    final user = await _signInWithFacebook();
+    return user;
+  }
+
+  dynamic _signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await facebookAuth.login();
+      final OAuthCredential facebookAuthCredential = FacebookAuthProvider
+          .credential(loginResult.accessToken!.token);
+      await firebaseAuth.signInWithCredential(facebookAuthCredential);
+      UserModel userModel = UserModel(
+          user: firebaseAuth.currentUser
+      );
+      return userModel;
+    }  on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
       throw ServerException('Unable to connect to server');

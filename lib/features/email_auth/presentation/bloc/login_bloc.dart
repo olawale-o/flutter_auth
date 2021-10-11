@@ -8,6 +8,7 @@ import '../../../../core/exceptions/failure.dart';
 import '../../data/model/user_model.dart';
 import '../../domain/usecases/auth_google_sign_usecase.dart';
 import '../../domain/usecases/auth_login_usecase.dart';
+import '../../domain/usecases/auth_facebook_login_usecase.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -15,13 +16,16 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthLoginUseCase _authLoginUseCase;
   final AuthGoogleSigInUseCase _authGoogleSigInUseCase;
+  final AuthFacebookSigInUseCase _authFacebookSigInUseCase;
   final FirebaseAuth _firebaseAuth;
   LoginBloc({
     required AuthLoginUseCase authLoginUseCase,
     required AuthGoogleSigInUseCase authGoogleSigInUseCase,
+    required AuthFacebookSigInUseCase authFacebookSigInUseCase,
     required FirebaseAuth firebaseAuth,
   }) : _authLoginUseCase = authLoginUseCase,
      _authGoogleSigInUseCase = authGoogleSigInUseCase,
+     _authFacebookSigInUseCase = authFacebookSigInUseCase,
      _firebaseAuth = firebaseAuth,
      super(LoginInitial()) {
     print('Login bloc');
@@ -38,6 +42,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if(event is GoogleSigInEvent) {
       yield LoginLoading();
       final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
+      yield* _eitherFailureOrLoaded(failureOrUser);
+    } else if(event is FacebookSigInEvent) {
+      yield LoginLoading();
+      final failureOrUser  = await _authFacebookSigInUseCase(NoParams());
       yield* _eitherFailureOrLoaded(failureOrUser);
     }
   }

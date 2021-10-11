@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../bloc/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/login_bloc.dart';
 import '../../../../core/navigation/navigation_bloc.dart';
 import '../../../../core/routes/routes.dart';
 import '../../../../injection_container.dart';
@@ -56,9 +56,13 @@ class _LoginPageState extends State<LoginPage> {
                               SocialButton(logo: "assets/twitter.png",
                                   text: "Continue with twitter",
                                   voidCallback: () => print('twitter')),
-                              SocialButton(logo: "assets/facebook.png",
-                                  text: "Continue with facebook",
-                                  voidCallback: () => print('facebook')),
+                              Builder(
+                                builder: (context) {
+                                  return SocialButton(logo: "assets/facebook.png",
+                                      text: "Continue with facebook",
+                                      voidCallback: () => BlocProvider.of<LoginBloc>(context).add(FacebookSigInEvent()));
+                                }
+                              ),
                             ],
                           )
                         ],
