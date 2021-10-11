@@ -34,6 +34,7 @@ Future<void> init() async {
       firebaseAuth: s1(),
       authGoogleSigInUseCase: s1(),
       authLoginUseCase: s1(),
+      authFacebookSigInUseCase: s1(),
     )
   );
 
