@@ -78,6 +78,11 @@ class AuthRepositoryImpl implements AuthRepository {
     return _handleRequest(authRemoteDataSource.signInWithGoogle);
   }
 
+  @override
+  Future<Either<Failure, UserModel>> signInWithFacebook() async {
+    return await _handleRequest(authRemoteDataSource.signInWithFacebook);
+  }
+
   Future<Either<Failure, UserModel>> _handleRequest(Function callback) async {
     try {
       final result = await callback();
@@ -90,4 +95,5 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(UncaughtFailure(e.toString()));
     }
   }
+
 }
