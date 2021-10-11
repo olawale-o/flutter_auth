@@ -13,3 +13,5 @@ class NormalLoginEvent extends LoginEvent {
 }
 
 class GoogleSigInEvent extends LoginEvent {}
+
+class FacebookSigInEvent extends LoginEvent {}
