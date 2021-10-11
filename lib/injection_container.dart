@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/features/email_auth/presentation/bloc/register_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'features/email_auth/domain/usecases/auth_facebook_login_usecase.dart';
+import 'features/email_auth/presentation/bloc/register_bloc.dart';
 import 'features/email_auth/domain/usecases/auth_google_sign_usecase.dart';
 import 'features/email_auth/data/datasource/auth_local_datasource.dart';
 import 'features/email_auth/domain/usecases/auth_current_user_usecase.dart';
@@ -12,8 +14,6 @@ import 'features/email_auth/presentation/bloc/auth_bloc.dart';
 import 'features/email_auth/data/repository/auth_repository_impl.dart';
 import 'features/email_auth/domain/repository/auth_repository.dart';
 import 'features/email_auth/data/datasource/auth_remote_datasource.dart';
-import 'package:get_it/get_it.dart';
-
 import 'core/navigation/navigation_bloc.dart';
 import 'features/email_auth/presentation/bloc/login_bloc.dart';
 
@@ -58,6 +58,7 @@ Future<void> init() async {
   s1.registerLazySingleton(() => AuthLogoutUseCase(authRepository: s1()));
   s1.registerLazySingleton(() => AuthCurrentUserUseCase(authRepository: s1()));
   s1.registerLazySingleton(() => AuthGoogleSigInUseCase(authRepository: s1()));
+  s1.registerLazySingleton(() => AuthFacebookSigInUseCase(authRepository: s1()));
 
   // datasources
   s1.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(
