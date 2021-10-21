@@ -49,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
                                   return SocialButton(logo: 'assets/google.png',
                                       text: "Continue with google",
                                       voidCallback: () => BlocProvider.of<LoginBloc>(context).add(GoogleSigInEvent())
-                                          //context.read<LoginBloc>().add(GoogleSigInEvent())
                                   );
                                 }
                               ),
@@ -75,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                             Text('Don\'t have an account? '),
                             TextButton(onPressed: () =>
                                 BlocProvider.of<NavigationBloc>(context)
-                                    .add(NavigationPushName(route: signup_page)),
+                                    .add(NavigationPushReplace(route: signup_page)),
                               child: Text('Sign up'),)
                           ],
                         ),

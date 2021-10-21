@@ -5,6 +5,7 @@ import '../../../../core/navigation/navigation_bloc.dart';
 import '../../../../core/routes/routes.dart';
 import '../bloc/register_bloc.dart';
 import '../../../../injection_container.dart';
+import '../widgets/input_field.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({Key? key}) : super(key: key);
@@ -57,36 +58,18 @@ class _SignupFormState extends State<SignupForm> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: StreamBuilder(
+                        InputField(
+                            controller: _email,
                             stream: _validationBloc.email$,
-                            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) => TextField(
-                              controller: _email,
-                              onChanged: (value) => _validationBloc.onChangeEmail(value),
-                              decoration: InputDecoration(
-                                  errorText: snapshot.error != null ? "${snapshot.error}" : null,
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Email'
-                              ),
-                            ),
-                          ),
+                            validator: (value) => _validationBloc.onChangeEmail(value),
+                            label: 'Email'
                         ),
-
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: StreamBuilder(
+                        InputField(
+                            controller: _password,
                             stream: _validationBloc.password$,
-                            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) => TextField(
-                              controller: _password,
-                              onChanged: (value) => _validationBloc.onChangePassword(value),
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                  errorText: snapshot.error != null ? "${snapshot.error}" : null,
-                                  border: OutlineInputBorder(),
-                                  labelText: 'Password'
-                              ),),
-                          ),
+                            validator: (value) => _validationBloc.onChangePassword(value),
+                            label: 'Password',
+                            obscureText: true,
                         ),
                         StreamBuilder(
                             stream: _validationBloc.validSubmit,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/core/navigation/navigation_bloc.dart';
-import 'package:flutter_auth/core/routes/routes.dart';
-import 'package:flutter_auth/features/email_auth/presentation/bloc/register_bloc.dart';
-import 'package:flutter_auth/features/email_auth/presentation/widgets/auth_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/navigation/navigation_bloc.dart';
+import '../../../../core/routes/routes.dart';
+import '../bloc/register_bloc.dart';
+import '../widgets/auth_button.dart';
+
 
 import '../../../../injection_container.dart';
 
@@ -44,7 +45,8 @@ class _SignupPageState extends State<SignupPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('Already have an account? '),
-                        TextButton( onPressed: () => BlocProvider.of<NavigationBloc>(context).add(NavigationPushName(route: login_page)),
+                        TextButton( onPressed: () => BlocProvider.of<NavigationBloc>(context)
+                            .add(NavigationPushReplace(route: login_page)),
                           child: Text('Log in'),)
                       ],
                     ),
