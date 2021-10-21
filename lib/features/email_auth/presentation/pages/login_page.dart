@@ -49,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
                                   return SocialButton(logo: 'assets/google.png',
                                       text: "Continue with google",
                                       voidCallback: () => BlocProvider.of<LoginBloc>(context).add(GoogleSigInEvent())
-                                          //context.read<LoginBloc>().add(GoogleSigInEvent())
                                   );
                                 }
                               ),
