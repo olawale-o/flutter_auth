@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                             Text('Don\'t have an account? '),
                             TextButton(onPressed: () =>
                                 BlocProvider.of<NavigationBloc>(context)
-                                    .add(NavigationPushName(route: signup_page)),
+                                    .add(NavigationPushReplace(route: signup_page)),
                               child: Text('Sign up'),)
                           ],
                         ),
