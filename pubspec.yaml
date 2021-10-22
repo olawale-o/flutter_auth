@@ -45,6 +45,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.16
+  bloc_test: ^8.3.0
+  firebase_auth_mocks: ^0.8.1
+  build_runner:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
