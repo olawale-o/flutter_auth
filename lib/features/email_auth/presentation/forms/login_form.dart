@@ -37,8 +37,6 @@ class _LoginFormState extends State<LoginForm> {
   
   void _onLogin(BuildContext context) {
     BlocProvider.of<LoginBloc>(context).add(NormalLoginEvent(email: _email.text, password: _password.text));
-    _email.clear();
-    _password.clear();
   }
 
   @override
@@ -53,6 +51,8 @@ class _LoginFormState extends State<LoginForm> {
                   BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
                   BlocProvider.of<NavigationBloc>(context)
                       .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
+                  _email.clear();
+                  _password.clear();
                 }
               },
               child: Scaffold(
@@ -76,14 +76,20 @@ class _LoginFormState extends State<LoginForm> {
                             label: 'Password',
                             obscureText: true,
                         ),
-                        StreamBuilder(
-                          stream: _validationBloc.validSubmit,
-                          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                            return TextButton(
-                              onPressed: () => snapshot.data == true ? _onLogin(context)  : null,
-                              child: Text('Continue'),);
+                        BlocBuilder<LoginBloc, LoginState>(builder: (BuildContext context, LoginState state) {
+                          if (state is LoginLoading) {
+                            return CircularProgressIndicator();
                           }
-                        ),
+                          return StreamBuilder(
+                              stream: _validationBloc.validSubmit,
+                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                return TextButton(
+                                  onPressed: () => snapshot.data == true ? _onLogin(context)  : null,
+                                  child: Text('Continue'),);
+                              }
+                          );
+                        }),
+
                         BlocBuilder<AuthBloc, AuthState>(builder: (BuildContext context, AuthState state) {
                           if (state is AuthError) {
                             return Text(state.message);

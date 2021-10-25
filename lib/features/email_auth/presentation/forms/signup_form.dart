@@ -34,8 +34,6 @@ class _SignupFormState extends State<SignupForm> {
 
   void _onRegister(BuildContext context) {
     BlocProvider.of<RegisterBloc>(context).add(NormalRegisterEvent(email: _email.text, password: _password.text));
-    _email.clear();
-    _password.clear();
   }
 
   @override
@@ -48,6 +46,8 @@ class _SignupFormState extends State<SignupForm> {
                 BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
                 BlocProvider.of<NavigationBloc>(context)
                   .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
+                _email.clear();
+                _password.clear();
                 }
               },
             child: Scaffold(
@@ -71,14 +71,19 @@ class _SignupFormState extends State<SignupForm> {
                             label: 'Password',
                             obscureText: true,
                         ),
-                        StreamBuilder(
-                            stream: _validationBloc.validSubmit,
-                            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                              return TextButton(
-                                onPressed: () => snapshot.data == true ? _onRegister(context) : null,
-                                child: Text('Create'),);
-                            }
-                        ),
+                        BlocBuilder<RegisterBloc, RegisterState>(builder: (BuildContext context, RegisterState state) {
+                          if (state is RegisterLoading) {
+                            return CircularProgressIndicator();
+                          }
+                          return StreamBuilder(
+                              stream: _validationBloc.validSubmit,
+                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                return TextButton(
+                                  onPressed: () => snapshot.data == true ? _onRegister(context)  : null,
+                                  child: Text('Create'),);
+                              }
+                          );
+                        }),
                       ],
                     ),
                   ),
