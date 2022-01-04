@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
@@ -23,46 +22,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 }) : _authLogoutUseCase = logoutUseCase,
     _authCurrentUserUseCase = currentUserUseCase,
         super(AuthInitial()) {
-    print('Auth Bloc');
-    add(AppStartedEvent());
+    on<AuthLogoutEvent>(_onLogout);
+    on<AppStartedEvent>(_onAppStarted);
+    on<LoggedInEvent>(_onLoggedIn);
+
   }
 
-  @override
-  Stream<AuthState> mapEventToState(
-    AuthEvent event,
-  ) async* {
-    if(event is AuthLogoutEvent) {
-      yield AuthLoading();
-      yield AuthInitial();
-      final failureOrVoid = await _authLogoutUseCase(NoParams());
-      yield* _eitherFailureOrVoid(failureOrVoid);
-    } else if (event is AuthCurrentUserEvent) {
-      yield AuthLoading();
-      final failureOrUser = await _authCurrentUserUseCase(NoParams());
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if (event is AppStartedEvent) {
-      yield AuthLoading();
-      final failureOrUser = await _authCurrentUserUseCase(NoParams());
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if (event is LoggedInEvent) {
-      yield AuthLoading();
-      final failureOrUser = await _authCurrentUserUseCase(NoParams());
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    }
+  void _onLogout(AuthEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    emit(AuthInitial());
+    final failureOrVoid = await _authLogoutUseCase(NoParams());
+    emit(failureOrVoid.fold((e) => AuthError(message: _buildError(e)), (u) => AuthInitial()));
   }
 
-  Stream<AuthState> _eitherFailureOrLoaded(Either<Failure, UserModel> failureOrUser) async* {
-    yield failureOrUser.fold(
-     (e) => AuthError(message: _buildError(e)),
-     (u) {
-     if (u.user != null) return AuthLoaded(userModel: _buildUser(u));
-       return AuthInitial();
-     }
+  void _onAppStarted(AuthEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final failureOrUser = await _authCurrentUserUseCase(NoParams());
+    emit(_failureOrUser(failureOrUser));
+  }
+
+  void _onLoggedIn(AuthEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final failureOrUser = await _authCurrentUserUseCase(NoParams());
+    emit(_failureOrUser(failureOrUser));
+  }
+
+  _failureOrUser (Either<Failure, UserModel> failureOrUser) {
+    return failureOrUser.fold(
+      (e) => AuthError(message: _buildError(e)),
+      (u) {
+        if (u.isNotEmpty) return AuthLoaded(userModel: _buildUser(u));
+        return AuthInitial();
+      }
     );
-  }
-
-  Stream<AuthState> _eitherFailureOrVoid(Either<Failure, void> failureOrVoid) async* {
-    yield failureOrVoid.fold((e) => AuthError(message: _buildError(e)), (u) => AuthInitial());
   }
 
   UserModel _buildUser(UserModel authState) => authState;

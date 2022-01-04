@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -17,7 +16,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final AuthLoginUseCase _authLoginUseCase;
   final AuthGoogleSigInUseCase _authGoogleSigInUseCase;
   final AuthFacebookSigInUseCase _authFacebookSigInUseCase;
-  final FirebaseAuth _firebaseAuth;
   LoginBloc({
     required AuthLoginUseCase authLoginUseCase,
     required AuthGoogleSigInUseCase authGoogleSigInUseCase,
@@ -26,38 +24,41 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }) : _authLoginUseCase = authLoginUseCase,
      _authGoogleSigInUseCase = authGoogleSigInUseCase,
      _authFacebookSigInUseCase = authFacebookSigInUseCase,
-     _firebaseAuth = firebaseAuth,
      super(LoginInitial()) {
     print('Login bloc');
+    on<NormalLoginEvent>(_loginWithCredentials);
+
+    on<GoogleSigInEvent>(_googleSignIn);
+
+    on<FacebookSigInEvent>(_facebookSignIn);
   }
 
-  @override
-  Stream<LoginState> mapEventToState(
-    LoginEvent event,
-  ) async* {
-    if (event is NormalLoginEvent) {
-      yield LoginLoading();
-      final failureOrUser = await _authLoginUseCase(Params(email: event.email, password: event.password));
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if(event is GoogleSigInEvent) {
-      yield LoginLoading();
-      final failureOrUser  = await _authGoogleSigInUseCase(NoParams());
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    } else if(event is FacebookSigInEvent) {
-      yield LoginLoading();
-      final failureOrUser  = await _authFacebookSigInUseCase(NoParams());
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    }
+  void _loginWithCredentials(NormalLoginEvent event, Emitter<LoginState> emit) async {
+    emit(LoginLoading());
+    final failureOrUser = await _authLoginUseCase(Params(email: event.args['email']!, password: event.args['password']!));
+    emit(_failureOrUser(failureOrUser));
   }
 
-  Stream<LoginState> _eitherFailureOrLoaded(Either<Failure, UserModel> failureOrUser) async* {
-    yield failureOrUser.fold(
+  void _googleSignIn(GoogleSigInEvent event, Emitter<LoginState> emit) async {
+    emit(LoginLoading());
+    final failureOrUser = await _authGoogleSigInUseCase(NoParams());
+    emit(_failureOrUser(failureOrUser));
+  }
+
+  void _facebookSignIn(FacebookSigInEvent event, Emitter<LoginState> emit) async {
+    emit(LoginLoading());
+    final failureOrUser = await _authFacebookSigInUseCase(NoParams());
+    emit(_failureOrUser(failureOrUser));
+  }
+
+
+  _failureOrUser(Either<Failure, UserModel> failureOrUser) {
+    return failureOrUser.fold(
             (e) => LoginFailure(_buildError(e)),
             (u) {
-          if (u.user != null) return LoginSuccess(_buildUser(u));
-          return LoginInitial();
-        }
-    );
+              if (u.isNotEmpty) return LoginSuccess(_buildUser(u));
+              return LoginInitial();
+            });
   }
 
   UserModel _buildUser(UserModel user) => user;
