@@ -36,8 +36,16 @@ class _LoginFormState extends State<LoginForm> {
   }
   
   void _onLogin(BuildContext context) {
-    BlocProvider.of<LoginBloc>(context).add(NormalLoginEvent(email: _email.text, password: _password.text));
+    BlocProvider.of<LoginBloc>(context).add(NormalLoginEvent(args: {'email': _email.text, 'password': _password.text}));
   }
+
+  showSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +58,11 @@ class _LoginFormState extends State<LoginForm> {
                 if (state is LoginSuccess) {
                   BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
                   BlocProvider.of<NavigationBloc>(context)
-                      .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
-                  _email.clear();
-                  _password.clear();
+                      .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.email));
+                }
+
+                if (state is LoginFailure) {
+                  showSnackBar(context, state.message);
                 }
               },
               child: Scaffold(

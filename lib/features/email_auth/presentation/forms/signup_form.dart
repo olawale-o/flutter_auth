@@ -36,6 +36,12 @@ class _SignupFormState extends State<SignupForm> {
     BlocProvider.of<RegisterBloc>(context).add(NormalRegisterEvent(email: _email.text, password: _password.text));
   }
 
+  showSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RegisterBloc>(
@@ -45,9 +51,10 @@ class _SignupFormState extends State<SignupForm> {
               if (state is RegisterSuccess) {
                 BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
                 BlocProvider.of<NavigationBloc>(context)
-                  .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
-                _email.clear();
-                _password.clear();
+                  .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.email));
+                }
+              if (state is RegisterFailure) {
+                  showSnackBar(context, state.message);
                 }
               },
             child: Scaffold(
