@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/exceptions/exception.dart';
@@ -12,6 +13,7 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle();
   Future<UserModel> signInWithFacebook();
   Future<void> logout();
+
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -39,19 +41,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserCredential _userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
-          user: _userCredential.user,
-      );
+        email: _userCredential.user!.email,
+        uid: _userCredential.user!.uid,
+        name: _userCredential.user!.displayName,);
       return userModel;
     } on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
       throw ServerException('Unable to connect to server');
     } on FirebaseAuthException catch(e) {
-      if (e.code == 'weak-password') {
-        throw AuthException("The password provided is too weak");
-      } else if (e.code == 'email-already-in-use') {
-        throw AuthException('Email has been taken');
-      }
+      throw AuthException.fromCode(e.code);
     } catch(e) {
       throw Exception('Error $e');
     }
@@ -62,19 +61,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       UserCredential _userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       UserModel userModel = UserModel(
-          user: _userCredential.user,
-      );
+        email: _userCredential.user!.email,
+        uid: _userCredential.user!.uid,
+        name: _userCredential.user!.displayName,);
       return userModel;
     } on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
       throw ServerException('Unable to connect to server');
     } on FirebaseAuthException catch(e) {
-      if (e.code == 'user-not-found') {
-        throw AuthException('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        throw AuthException('Wrong password provided for that user.');
-      }
+      throw AuthException.fromCode(e.code);
     } catch(e) {
       throw Exception('Error $e');
     }
@@ -112,13 +108,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       await firebaseAuth.signInWithCredential(credential);
       UserModel userModel = UserModel(
-        user: firebaseAuth.currentUser
-      );
+        email: firebaseAuth.currentUser!.email,
+        uid: firebaseAuth.currentUser!.uid,
+        name: firebaseAuth.currentUser!.displayName);
       return userModel;
     } on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
       throw ServerException('Unable to connect to server');
+    } on PlatformException catch(e) {
+      print('PlatformException');
+    } on FirebaseAuthException catch(e) {
+      throw AuthException(e.code);
     } catch(e) {
       throw Exception('Error $e');
     }
@@ -137,16 +138,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .credential(loginResult.accessToken!.token);
       await firebaseAuth.signInWithCredential(facebookAuthCredential);
       UserModel userModel = UserModel(
-          user: firebaseAuth.currentUser
-      );
+        email: firebaseAuth.currentUser!.email,
+        uid: firebaseAuth.currentUser!.uid,
+        name: firebaseAuth.currentUser!.displayName);
       return userModel;
     }  on SocketException {
       throw NetworkException('Please check your internet connection');
     } on HttpException {
       throw ServerException('Unable to connect to server');
+    } on FirebaseAuthException catch(e) {
+      throw AuthException(e.code);
     } catch(e) {
       throw Exception('Error $e');
     }
   }
-
 }

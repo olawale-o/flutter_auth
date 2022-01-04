@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
               if (state is LoginSuccess) {
                 BlocProvider.of<NavigationBloc>(context).add(NavigationPop());
                 BlocProvider.of<NavigationBloc>(context)
-                    .add(NavigationPushName(route: dashboard_page, data: state.userModel.user?.email));
+                    .add(NavigationPushName(route: dashboard_page, data: state.userModel.email));
               }
             },
             child: Scaffold(

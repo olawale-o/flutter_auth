@@ -1,19 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class UserEntity extends Equatable {
-  final User? user;
-
-  UserEntity({required this.user,});
+  final String? email;
+  final String uid;
+  final String? name;
+  const UserEntity({required this.uid, this.email, this.name});
 
   factory UserEntity.fromJson(dynamic json) {
     return UserEntity(
-      user: json["user"],
+      uid: json['uid'],
+      name: json['name'],
+      email: json['email'],
     );
   }
   @override
   // TODO: implement props
-  List<Object?> get props => [user];
+  List<Object?> get props => [uid, email, name];
 
 }
 

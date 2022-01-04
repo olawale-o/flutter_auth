@@ -14,16 +14,32 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<UserModel> currentUser() async{
-    final user = UserModel(user: _currentUser());
-    return user;
+    return _currentUser();
   }
 
-  User? _currentUser(){
+  UserModel _currentUser(){
     try {
-      return _firebaseAuth.currentUser;
+      return _firebaseAuth.currentUser == null ? UserModel.empty
+          : UserModel(
+          uid: _firebaseAuth.currentUser!.uid,
+          email: _firebaseAuth.currentUser!.email,
+          name: _firebaseAuth.currentUser!.displayName,);
     } catch(e) {
       throw Exception('No current user');
     }
   }
 
+  Stream<UserModel> get user {
+    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      final user = firebaseUser == null ? UserModel.empty : firebaseUser.toUser;
+      return user;
+    });
+  }
+
+}
+
+extension on User {
+  UserModel get toUser {
+    return UserModel(uid: uid, email: email, name: displayName);
+  }
 }
