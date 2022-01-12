@@ -15,3 +15,8 @@ class NormalLoginEvent extends LoginEvent {
 class GoogleSigInEvent extends LoginEvent {}
 
 class FacebookSigInEvent extends LoginEvent {}
+
+class EmailChangeEvent extends LoginEvent {
+  final String email;
+  EmailChangeEvent(this.email);
+}

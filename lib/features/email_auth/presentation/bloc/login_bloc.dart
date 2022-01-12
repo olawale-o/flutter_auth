@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:formz/formz.dart';
 import '../../../../core/domain/usecase.dart';
 import '../../../../core/exceptions/failure.dart';
 import '../../data/model/user_model.dart';
@@ -50,7 +51,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final failureOrUser = await _authFacebookSigInUseCase(NoParams());
     emit(_failureOrUser(failureOrUser));
   }
-
 
   _failureOrUser(Either<Failure, UserModel> failureOrUser) {
     return failureOrUser.fold(
