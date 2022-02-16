@@ -13,6 +13,11 @@ class LoginSuccess extends LoginState {
   const LoginSuccess(this.userModel);
 }
 
+class LoginStatus extends LoginState {
+  final FormzInputStatus status;
+  const LoginStatus(this.status);
+}
+
 class LoginFailure extends LoginState {
   final String message;
   const LoginFailure(this.message);

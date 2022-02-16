@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/core/blocs/validation/validation_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'features/email_auth/domain/usecases/auth_facebook_login_usecase.dart';
@@ -44,6 +45,8 @@ Future<void> init() async {
     authRegisterUseCase: s1(),
     )
   );
+
+  s1.registerFactory(() => ValidationCubit());
 
   // repositiories
   s1.registerLazySingleton<AuthRepository>(() =>

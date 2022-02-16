@@ -23,7 +23,7 @@ class _SplashPageState extends State<SplashPage> {
         }
         if (state is AuthLoaded) {
           BlocProvider.of<NavigationBloc>(context)
-              .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.user?.email));
+              .add(NavigationPushReplace(route: dashboard_page, data: state.userModel.email));
         }
       },
       child: Scaffold(
@@ -31,7 +31,7 @@ class _SplashPageState extends State<SplashPage> {
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               return Center(
-                child: Text('Splash screen $state'),
+                child: CircularProgressIndicator(),
               );
             },
           )

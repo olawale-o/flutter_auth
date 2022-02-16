@@ -22,24 +22,20 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
      _firebaseAuth = firebaseAuth,
      super(RegisterInitial()) {
     print("Register Bloc");
+    on<NormalRegisterEvent>(_registerWithCredentials);
   }
 
-  @override
-  Stream<RegisterState> mapEventToState(
-    RegisterEvent event,
-  ) async* {
-    if (event is NormalRegisterEvent) {
-      yield RegisterLoading();
-      final failureOrUser = await _authRegisterUseCase(Params(email: event.email, password: event.password));
-      yield* _eitherFailureOrLoaded(failureOrUser);
-    }
+  void _registerWithCredentials(NormalRegisterEvent event, Emitter<RegisterState> emit) async {
+    emit(RegisterLoading());
+    final failureOrUser = await _authRegisterUseCase(Params(email: event.email, password: event.password));
+    emit(_eitherFailureOrLoaded(failureOrUser));
   }
 
-  Stream<RegisterState> _eitherFailureOrLoaded(Either<Failure, UserModel> failureOrUser) async* {
-    yield failureOrUser.fold(
+  _eitherFailureOrLoaded(Either<Failure, UserModel> failureOrUser)  {
+    return failureOrUser.fold(
             (e) => RegisterFailure(_buildError(e)),
             (u) {
-          if (u.user != null) return RegisterSuccess(_buildUser(u));
+          if (u.isNotEmpty) return RegisterSuccess(_buildUser(u));
           return RegisterInitial();
         }
     );

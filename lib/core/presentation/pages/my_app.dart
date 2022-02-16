@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
             create: (context) => s1<NavigationBloc>()
         ),
         BlocProvider<AuthBloc>(
-            create: (context) => s1<AuthBloc>()
+            create: (context) => s1<AuthBloc>()..add(AppStartedEvent())
         ),
       ],
       child: MaterialApp(

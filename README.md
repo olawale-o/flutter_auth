@@ -8,6 +8,8 @@
 - Flutter
 - Flutter Bloc
 
+![screenshot](https://github.com/olawale-o/flutter_auth/blob/develop/screenshot.png?raw=true")
+
 
 #### Prerequisites
 
